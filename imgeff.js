@@ -170,7 +170,7 @@ if (!Date.now)
                     rain_length : 40,
                     speed : 50,
                     angle : -0.2,
-                    reloadMsec : 100
+                    reload_msec : 100
                 };
                 var options = $.extend(defaults, options);
 
