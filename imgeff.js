@@ -47,29 +47,29 @@ if (!Date.now)
             return;
         }
 
-		var _ctx = canvas.getContext('2d');
-		
-		var _width = parseInt(canvas_elm.attr("width"));
-		var _height = parseInt(canvas_elm.attr("height"));
+        var _ctx = canvas.getContext('2d');
+
+        var _width = parseInt(canvas_elm.attr("width"));
+        var _height = parseInt(canvas_elm.attr("height"));
         var _draw = function(){};
 
-		var _img = new Image();
-		_img.src = canvas_elm.data("src") + "?" + new Date().getTime();
-		
-		_img.onload = function() {
-		
-			_ctx.drawImage(_img, 0, 0);
-			
-	        function tick(){
-	        
-	        	_draw();
+        var _img = new Image();
+        _img.src = canvas_elm.data("src") + "?" + new Date().getTime();
 
-	            tick_timeout = requestAnimationFrame(function(){tick()});
-	        }
-	        tick();
-		};
-		
-		if( effect == "snow" ){
+        _img.onload = function() {
+
+            _ctx.drawImage(_img, 0, 0);
+
+            function tick(){
+
+                _draw();
+
+                tick_timeout = requestAnimationFrame(function(){tick()});
+            }
+            tick();
+        };
+
+        if( effect == "snow" ){
 
             (function(){
 
@@ -158,8 +158,8 @@ if (!Date.now)
                 };
             })();
 
-		}
-		else if( effect == "rain" ){
+        }
+        else if( effect == "rain" ){
 
             (function(){
 
@@ -267,8 +267,8 @@ if (!Date.now)
 
             })();
 
-		}
-		
+        }
+
     }
     
 })(jQuery);
