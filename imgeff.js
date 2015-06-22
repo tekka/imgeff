@@ -40,7 +40,7 @@ if (!Date.now)
 
         if( canvas.getContext == undefined ){
 
-            //In the case of legacy browser, replase to imgtag.
+            //In the case of legacy browser, replace to imgtag.
 
             canvas_elm.after("<img src='" + canvas_elm.data("src") + "' />");
             canvas_elm.remove();
