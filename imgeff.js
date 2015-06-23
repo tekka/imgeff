@@ -80,7 +80,7 @@ if (!Date.now)
                     angle: 0,
                     fluctuation: true
                 };
-                var options = $.extend(defaults, options);
+                options = $.extend(defaults, options);
 
                 var mp = options["mp"]; //max particles
                 var angle = options["angle"];
@@ -172,7 +172,7 @@ if (!Date.now)
                     angle : -0.2,
                     reload_msec : 100
                 };
-                var options = $.extend(defaults, options);
+                options = $.extend(defaults, options);
 
                 var mp = options["mp"]; //max particles
                 var angle = options["angle"];
