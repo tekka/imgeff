@@ -4,8 +4,6 @@
  * Copyright (c) 2015 Osamu Terada
  * License: MIT 
  */
-var userAgent = window.navigator.userAgent.toLowerCase();
-var appVersion = window.navigator.appVersion.toLowerCase();
 
 
 if (!Date.now)
@@ -21,7 +19,7 @@ if (!Date.now)
         window.cancelAnimationFrame = (window[vp+'CancelAnimationFrame']
                                    || window[vp+'CancelRequestAnimationFrame']);
     }
-    if (/iP(ad|hone|od).*OS 6/.test(window.navigator.userAgent) // iOS6 is buggy
+    if (/iP(ad|hone|od).*OS 6/.test(window.navigator.userAgent)
         || !window.requestAnimationFrame || !window.cancelAnimationFrame) {
         var lastTime = 0;
         window.requestAnimationFrame = function(callback) {
@@ -42,36 +40,36 @@ if (!Date.now)
 
         if( canvas.getContext == undefined ){
 
-            //In the case of legacy browser, replase to imgtag.
+            //In the case of legacy browser, replace to imgtag.
 
             canvas_elm.after("<img src='" + canvas_elm.data("src") + "' />");
             canvas_elm.remove();
             return;
         }
 
-		var ctx = canvas.getContext('2d');
-		
-		var W = parseInt(canvas_elm.attr("width"));
-		var H = parseInt(canvas_elm.attr("height"));
-        var draw = function(){};
+        var _ctx = canvas.getContext('2d');
 
-		var img = new Image();
-		img.src = canvas_elm.data("src") + "?" + new Date().getTime();
-		
-		img.onload = function() {
-		
-			ctx.drawImage(img, 0, 0);
-			
-	        function tick(){
-	        
-	        	draw();
+        var _width = parseInt(canvas_elm.attr("width"));
+        var _height = parseInt(canvas_elm.attr("height"));
+        var _draw = function(){};
 
-	            tickTimeout = requestAnimationFrame(function(){tick()});
-	        }
-	        tick();
-		};
-		
-		if( effect == "snow" ){
+        var _img = new Image();
+        _img.src = canvas_elm.data("src") + "?" + new Date().getTime();
+
+        _img.onload = function() {
+
+            _ctx.drawImage(_img, 0, 0);
+
+            function tick(){
+
+                _draw();
+
+                tick_timeout = requestAnimationFrame(function(){tick()});
+            }
+            tick();
+        };
+
+        if( effect == "snow" ){
 
             (function(){
 
@@ -92,29 +90,29 @@ if (!Date.now)
                 for(var i = 0; i < mp; i++)
                 {
                     particles.push({
-                        x: Math.random()*W, //x-coordinate
-                        y: Math.random()*H, //y-coordinate
+                        x: Math.random()*_width, //x-coordinate
+                        y: Math.random()*_height, //y-coordinate
                         r: Math.random()*4+1, //radius
                         d: Math.random()*mp //density
                     })
                 }
 
-                draw = function ()
+                _draw = function ()
                 {
 
-                    ctx.clearRect(0, 0, W, H);
-                    ctx.drawImage(img, 0, 0);
+                    _ctx.clearRect(0, 0, _width, _height);
+                    _ctx.drawImage(_img, 0, 0);
 
-                    ctx.fillStyle = options["color"];
+                    _ctx.fillStyle = options["color"];
 
-                    ctx.beginPath();
+                    _ctx.beginPath();
                     for(var i = 0; i < mp; i++)
                     {
                         var p = particles[i];
-                        ctx.moveTo(p.x, p.y);
-                        ctx.arc(p.x, p.y, p.r, 0, Math.PI*2, true);
+                        _ctx.moveTo(p.x, p.y);
+                        _ctx.arc(p.x, p.y, p.r, 0, Math.PI*2, true);
                     }
-                    ctx.fill();
+                    _ctx.fill();
 
                     if( options["fluctuation"] ){
                         angle += 0.01;
@@ -134,11 +132,11 @@ if (!Date.now)
                         p.y += Math.cos(angle+p.d) + options["speed"] + p.r/2;
                         p.x += Math.sin(angle) * 2;
 
-                        if(p.x > W+5 || p.x < -5 || p.y > H)
+                        if(p.x > _width+5 || p.x < -5 || p.y > _height)
                         {
                             if(i%3 > 0) //66.67% of the flakes
                             {
-                                particles[i] = {x: Math.random()*W, y: -10, r: p.r, d: p.d};
+                                particles[i] = {x: Math.random()*_width, y: -10, r: p.r, d: p.d};
                             }
                             else
                             {
@@ -146,12 +144,12 @@ if (!Date.now)
                                 if(Math.sin(angle) > 0)
                                 {
                                     //Enter from the left
-                                    particles[i] = {x: -5, y: Math.random()*H, r: p.r, d: p.d};
+                                    particles[i] = {x: -5, y: Math.random()*_height, r: p.r, d: p.d};
                                 }
                                 else
                                 {
                                     //Enter from the right
-                                    particles[i] = {x: W+5, y: Math.random()*H, r: p.r, d: p.d};
+                                    particles[i] = {x: _width+5, y: Math.random()*_height, r: p.r, d: p.d};
                                 }
                             }
                         }
@@ -160,19 +158,19 @@ if (!Date.now)
                 };
             })();
 
-		}
-		else if( effect == "rain" ){
+        }
+        else if( effect == "rain" ){
 
             (function(){
 
                 var defaults = {
                     mp : 50,
-                    colorFrom : 'rgba(100, 200, 255, 0.1)',
-                    colorTo : 'rgba(100, 200, 255, 1)',
-                    rainLength : 40,
+                    color_from : 'rgba(100, 200, 255, 0.1)',
+                    color_to : 'rgba(100, 200, 255, 1)',
+                    rain_length : 40,
                     speed : 50,
                     angle : -0.2,
-                    reloadMsec : 100
+                    reload_msec : 100
                 };
                 options = $.extend(defaults, options);
 
@@ -180,49 +178,49 @@ if (!Date.now)
                 var angle = options["angle"];
                 var speed = options["speed"];
                 var now = Date.now();
-                var lastTime = 0;
-                var reloadMsec = options["reloadMsec"];
-                var nextTime = Math.max(lastTime + reloadMsec, now);
+                var last_time = 0;
+                var reload_msec = options["reload_msec"];
+                var next_time = Math.max(last_time + reload_msec, now);
 
                 var particles = [];
 
                 for(var i = 0; i < mp; i++)
                 {
                     particles.push({
-                        x: Math.random()*W, //x-coordinate
-                        y: Math.random()*H, //y-coordinate
+                        x: Math.random()*_width, //x-coordinate
+                        y: Math.random()*_height, //y-coordinate
                         r: Math.random()*4+1, //radius
                         d: Math.random()*mp //density
                     })
                 }
 
-                draw = function()
+                _draw = function()
                 {
 
-                    ctx.clearRect(0, 0, W, H);
-                    ctx.drawImage(img, 0, 0);
+                    _ctx.clearRect(0, 0, _width, _height);
+                    _ctx.drawImage(_img, 0, 0);
 
                     for(var i = 0; i < particles.length; i++)
                     {
                         var p = particles[i];
 
-                        var xs = p.x -  Math.sin(angle) * options["rainLength"];
-                        var ys = p.y - Math.cos(angle) * options["rainLength"];
+                        var xs = p.x -  Math.sin(angle) * options["rain_length"];
+                        var ys = p.y - Math.cos(angle) * options["rain_length"];
 
-                        var grad= ctx.createLinearGradient(xs, ys, p.x, p.y);
+                        var grad= _ctx.createLinearGradient(xs, ys, p.x, p.y);
 
-                        grad.addColorStop(0, options["colorFrom"]);
-                        grad.addColorStop(1, options["colorTo"]);
+                        grad.addColorStop(0, options["color_from"]);
+                        grad.addColorStop(1, options["color_to"]);
 
-                        ctx.strokeStyle = grad;
+                        _ctx.strokeStyle = grad;
 
-                        ctx.beginPath();
+                        _ctx.beginPath();
 
-                        ctx.moveTo(p.x, p.y);
+                        _ctx.moveTo(p.x, p.y);
 
-                        ctx.lineTo(xs, ys);
+                        _ctx.lineTo(xs, ys);
 
-                        ctx.stroke();
+                        _ctx.stroke();
                     }
 
                     update();
@@ -233,11 +231,11 @@ if (!Date.now)
                 {
                     var now = Date.now();
 
-                    if( nextTime >= now ){
+                    if( next_time >= now ){
                         return;
                     }
-                    lastTime = now;
-                    nextTime = Math.max(lastTime + reloadMsec, now);
+                    last_time = now;
+                    next_time = Math.max(last_time + reload_msec, now);
 
                     for(var i = 0; i < particles.length; i++)
                     {
@@ -246,21 +244,21 @@ if (!Date.now)
                         p.x += Math.sin(angle) * options["speed"];
                         p.y += Math.cos(angle) * options["speed"];
 
-                        if(p.x > W+5 || p.x < -5 || p.y - 15 > H)
+                        if(p.x > _width+5 || p.x < -5 || p.y - 15 > _height)
                         {
                             if(i % 15 > 0)
                             {
-                                particles[i] = {x: Math.random()*W, y: Math.random() * H -10, r: p.r, d: p.d};
+                                particles[i] = {x: Math.random()*_width, y: Math.random() * _height -10, r: p.r, d: p.d};
                             }
                             else
                             {
                                 if(Math.sin(angle) > 0)
                                 {
-                                    particles[i] = {x: -5, y: Math.random()*H, r: p.r, d: p.d};
+                                    particles[i] = {x: -5, y: Math.random()*_height, r: p.r, d: p.d};
                                 }
                                 else
                                 {
-                                    particles[i] = {x: W+5, y: Math.random()*H, r: p.r, d: p.d};
+                                    particles[i] = {x: _width+5, y: Math.random()*_height, r: p.r, d: p.d};
                                 }
                             }
                         }
@@ -269,8 +267,8 @@ if (!Date.now)
 
             })();
 
-		}
-		
+        }
+
     }
     
 })(jQuery);
