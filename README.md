@@ -1,5 +1,5 @@
 # imgeff.js
 Add effect to image
 
-example
-http://tekka.github.io/imgeff/
+example  
+<http://tekka.github.io/imgeff/>
